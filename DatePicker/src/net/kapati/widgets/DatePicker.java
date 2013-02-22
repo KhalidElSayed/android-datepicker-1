@@ -20,6 +20,7 @@ public class DatePicker extends EditText implements DatePickerDialog.OnDateSetLi
 	protected int month;
 	protected int day;
 	protected OnDateSetListener onDateSetListener = null;
+	protected java.text.DateFormat dateFormat;
 	
 	public OnDateSetListener getOnDateSetListener() {
 		return onDateSetListener;
@@ -31,13 +32,12 @@ public class DatePicker extends EditText implements DatePickerDialog.OnDateSetLi
 	
 	public DatePicker(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		dateFormat = DateFormat.getMediumDateFormat(getContext());
 		
 		setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
 		setFocusable(false);
-	}
-	
-	public boolean hasDate() {
-		return (year != 0) && (month != 0) && (day != 0);
+		setToday();
 	}
 	
 	public int getYear() {
@@ -82,25 +82,30 @@ public class DatePicker extends EditText implements DatePickerDialog.OnDateSetLi
 		
 		return super.onTouchEvent(event);
 	}
+	
+	public java.text.DateFormat getDateFormat() {
+		return dateFormat;
+	}
+
+	public void setDateFormat(java.text.DateFormat dateFormat) {
+		this.dateFormat = dateFormat;
+		updateText();
+	}
+
+	public void setToday() {
+		Calendar c = Calendar.getInstance();
+		setDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+	}
 
 	protected void showDatePicker() {
 		DatePickerDialog datePickerDialog;
 		
-		if(hasDate()) {
-			datePickerDialog = new DatePickerDialog(
-					getContext(),
-					this,
-					getYear(),
-					getMonth(),
-					getDay());
-		} else {
-			datePickerDialog = new DatePickerDialog(
-					getContext(),
-					this,
-					Calendar.getInstance().get(Calendar.YEAR),
-					Calendar.getInstance().get(Calendar.MONTH),
-					Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-		}
+		datePickerDialog = new DatePickerDialog(
+				getContext(),
+				this,
+				getYear(),
+				getMonth(),
+				getDay());
 		
 		datePickerDialog.show();
 	}
@@ -117,6 +122,6 @@ public class DatePicker extends EditText implements DatePickerDialog.OnDateSetLi
 	
 	public void updateText() {
 		Calendar cal = new GregorianCalendar(getYear(), getMonth(), getDay());
-		setText(DateFormat.getDateFormat(getContext()).format(cal.getTime()));
+		setText(dateFormat.format(cal.getTime()));
 	}
 }

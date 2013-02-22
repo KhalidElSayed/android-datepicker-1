@@ -1,8 +1,9 @@
 package net.kapati.widgets.datepickerdemo;
 
-import android.os.Bundle;
+import net.kapati.widgets.DatePicker;
 import android.app.Activity;
-import android.view.Menu;
+import android.os.Bundle;
+import android.text.format.DateFormat;
 
 public class DemoActivity extends Activity {
 
@@ -10,13 +11,8 @@ public class DemoActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_demo);
+		
+		((DatePicker) findViewById(R.id.short_date)).setDateFormat(DateFormat.getDateFormat(this));
+		((DatePicker) findViewById(R.id.long_date)).setDateFormat(DateFormat.getLongDateFormat(this));
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_demo, menu);
-		return true;
-	}
-
 }
