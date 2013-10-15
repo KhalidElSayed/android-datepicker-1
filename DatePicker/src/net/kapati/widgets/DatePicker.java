@@ -19,6 +19,8 @@ public class DatePicker extends EditText implements DatePickerDialog.OnDateSetLi
 	protected int year;
 	protected int month;
 	protected int day;
+	protected long maxDate = -1;
+	protected long minDate = -1;
 	protected OnDateSetListener onDateSetListener = null;
 	protected java.text.DateFormat dateFormat;
 	
@@ -91,7 +93,19 @@ public class DatePicker extends EditText implements DatePickerDialog.OnDateSetLi
 		this.dateFormat = dateFormat;
 		updateText();
 	}
+	
+	public void setMaxDate(int year, int month, int day) {
+		Calendar c = Calendar.getInstance();
+		c.set(year, month, day, 23, 59, 59);
+		this.maxDate = c.getTimeInMillis();
+	}
 
+	public void setMinDate(int year, int month, int day) {
+		Calendar c = Calendar.getInstance();
+		c.set(year, month, day, 0, 0, 0);
+		this.minDate = c.getTimeInMillis();
+	}
+	
 	public void setToday() {
 		Calendar c = Calendar.getInstance();
 		setDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -106,6 +120,13 @@ public class DatePicker extends EditText implements DatePickerDialog.OnDateSetLi
 				getYear(),
 				getMonth(),
 				getDay());
+		
+		if (this.maxDate != -1) {
+			datePickerDialog.getDatePicker().setMaxDate(maxDate);
+		}
+		if (this.minDate != -1) {
+			datePickerDialog.getDatePicker().setMinDate(minDate);
+		}
 		
 		datePickerDialog.show();
 	}
